@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎯 艺考冲刺营 · 文科历史 · 长笛生专属</title>
+<style>
+:root{
+  --bg:#f6f4ef;
+  --card:#ffffff;
+  --ink:#2c2a26;
+  --muted:#8a857c;
+  --line:#e8e3d8;
+  --brand:#e8592c;      /* 主橙 */
+  --brand2:#b03a1f;
+  --hist:#6b5b3e;       /* 历史棕 */
+  --music:#7b3fa0;      /* 艺考紫 */
+  --good:#3a9d5d;
+  --warn:#e0a800;
+  --bad:#d64545;
+  --radius:16px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.6;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(1200px 500px at 80% -10%, rgba(233,89,44,.14), transparent 60%),
+    radial-gradient(900px 500px at 0% 10%, rgba(123,63,160,.12), transparent 55%);
+}
+
+/* ===== 顶栏 ===== */
+.topbar{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+  gap:10px;padding:14px 20px;background:linear-gradient(120deg,var(--brand),var(--brand2) 55%,var(--music));
+  color:#fff;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.15);
+}
+.brand{font-size:1.3rem;font-weight:800;letter-spacing:.5px;}
+.brand .tag{
+  font-size:.72rem;font-weight:600;background:rgba(255,255,255,.22);
+  padding:2px 10px;border-radius:20px;margin-left:8px;vertical-align:middle;
+}
+.countdowns{display:flex;gap:10px;flex-wrap:wrap;font-size:.8rem;font-weight:700;}
+.countdowns .cd{
+  background:rgba(255,255,255,.16);padding:4px 12px;border-radius:12px;white-space:nowrap;
+}
+.countdowns .cd b{font-size:1.05rem;margin-right:4px;}
+
+/* ===== 导航 ===== */
+.tabbar{
+  display:flex;gap:6px;padding:10px 14px;background:#fff;border-bottom:1px solid var(--line);
+  overflow-x:auto;position:sticky;top:60px;z-index:40;
+}
+.tab{
+  border:none;background:#f0ede5;color:var(--ink);font-size:.95rem;font-weight:700;
+  padding:9px 16px;border-radius:12px;cursor:pointer;white-space:nowrap;
+  transition:.15s;
+}
+.tab:hover{background:#e7e1d4;}
+.tab.active{background:var(--brand);color:#fff;box-shadow:0 3px 8px rgba(232,89,44,.35);}
+
+/* ===== 布局 ===== */
+.container{max-width:960px;margin:0 auto;padding:18px 16px 40px;}
+.view{display:none;animation:fade .25s;}
+.view.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;margin-bottom:16px;box-shadow:0 2px 6px rgba(0,0,0,.04);
+}
+.card h2{margin:0 0 6px;font-size:1.15rem;}
+.card h3{margin:16px 0 8px;font-size:1rem;}
+.card .sub{color:var(--muted);font-size:.85rem;margin:0 0 12px;}
+.section-title{
+  display:flex;align-items:center;gap:8px;font-size:1.25rem;font-weight:800;margin:22px 0 12px;
+}
+.section-title .bar{width:6px;height:22px;background:var(--brand);border-radius:3px;}
+
+/* ===== 进度条 ===== */
+.bar-wrap{background:#eee9de;border-radius:20px;height:14px;overflow:hidden;margin:8px 0;}
+.bar-fill{
+  height:100%;background:linear-gradient(90deg,var(--good),var(--brand));
+  border-radius:20px;transition:width .4s;width:0;
+}
+.pct{font-weight:800;color:var(--brand);}
+
+/* ===== 任务列表 ===== */
+.task{
+  display:flex;align-items:flex-start;gap:12px;padding:12px;border:1px solid var(--line);
+  border-radius:12px;margin-bottom:10px;background:#fff;
+}
+.task input[type=checkbox]{width:20px;height:20px;margin-top:4px;accent-color:var(--brand);cursor:pointer;}
+.task .t-body{flex:1;}
+.task .t-title{font-weight:700;}
+.task .t-meta{color:var(--muted);font-size:.8rem;margin-top:2px;}
+.task.done .t-title{text-decoration:line-through;color:var(--muted);}
+.task .badge{
+  font-size:.68rem;font-weight:800;padding:2px 8px;border-radius:10px;color:#fff;margin-left:8px;
+}
+.badge.hist{background:var(--hist);}
+.badge.music{background:var(--music);}
+.badge.quest{background:var(--brand);}
+.task .pill{flex-shrink:0;font-size:.75rem;font-weight:700;padding:4px 10px;border-radius:10px;align-self:center;}
+
+/* ===== 按钮 ===== */
+.btn{
+  border:none;background:var(--brand);color:#fff;font-weight:700;font-size:.92rem;
+  padding:10px 18px;border-radius:12px;cursor:pointer;transition:.15s;
+}
+.btn:hover{filter:brightness(1.07);transform:translateY(-1px);}
+.btn.ghost{background:#f0ede5;color:var(--ink);}
+.btn.music{background:var(--music);}
+.btn.hist{background:var(--hist);}
+.btn.big{width:100%;padding:14px;font-size:1rem;}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+/* ===== 徽章/奖杯 ===== */
+.trophy-row{display:flex;gap:8px;flex-wrap:wrap;}
+.trophy{
+  background:#fff7ec;border:1px solid #f0d9a8;border-radius:12px;padding:8px 12px;font-size:.8rem;font-weight:600;
+}
+
+/* ===== 计划 ===== */
+.week-card{background:#fff;border-left:5px solid var(--hist);}
+.week-card.music-week{border-left-color:var(--music);}
+.week-head{display:flex;justify-content:space-between;align-items:center;}
+.week-tag{font-size:.72rem;font-weight:800;padding:2px 10px;border-radius:10px;color:#fff;}
+.week-tag.hist{background:var(--hist);}
+.week-tag.music{background:var(--music);}
+.day-list{list-style:none;padding:0;margin:10px 0 0;}
+.day-list li{
+  padding:7px 0;border-bottom:1px dashed var(--line);font-size:.92rem;
+}
+.day-list li b{color:var(--brand);}
+.weekly-goal{background:#f2f8f2;border:1px solid #cde6cd;color:#2f5d3a;padding:10px 14px;border-radius:12px;margin-top:10px;font-size:.9rem;}
+
+/* ===== 历史闯关 ===== */
+.stage-pick{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.stage-btn{background:#fff;border:2px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer;font-weight:700;}
+.stage-btn.active{border-color:var(--hist);background:#f4efe4;}
+.mini-game{
+  background:linear-gradient(160deg,#faf6ee,#f1ebe0);border:1px solid #e6dcc8;
+  border-radius:var(--radius);padding:18px;
+}
+.items{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:14px 0;
+}
+.item-chip{
+  background:#fff;border:2px solid var(--hist);border-radius:12px;padding:12px 16px;
+  font-weight:800;cursor:pointer;user-select:none;transition:.12s;text-align:center;min-width:90px;
+}
+.item-chip.selected{background:var(--hist);color:#fff;transform:scale(1.05);}
+.item-chip.correct{background:var(--good);border-color:var(--good);color:#fff;}
+.item-chip.wrong{background:var(--bad);border-color:var(--bad);color:#fff;animation:shake .3s;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}}
+.game-feedback{font-size:.95rem;font-weight:600;text-align:center;min-height:24px;margin-top:8px;}
+.hint-box{
+  background:#fffbe6;border:1px solid #f0e0a0;padding:10px 14px;border-radius:12px;font-size:.88rem;margin-top:10px;
+}
+.qa-box{margin-bottom:12px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;}
+.qa-question{font-weight:700;margin-bottom:8px;}
+.qa-opts{display:flex;flex-direction:column;gap:8px;}
+.qa-opt{
+  border:2px solid var(--line);background:#fff;border-radius:10px;padding:9px 12px;cursor:pointer;font-size:.92rem;
+}
+.qa-opt:hover{border-color:var(--brand);}
+.qa-opt.correct{background:#eaf5ea;border-color:var(--good);}
+.qa-opt.wrong{background:#fbeaea;border-color:var(--bad);}
+.qa-explain{font-size:.85rem;color:var(--muted);margin-top:8px;}
+
+/* ===== 艺考 ===== */
+.instrument-img{
+  display:block;width:100%;max-height:260px;object-fit:cover;border-radius:12px;margin-bottom:12px;
+  border:1px solid var(--line);
+}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0;}
+.stat{
+  background:#f7f3f6;border:1px solid #e4d7e4;border-radius:12px;padding:12px;text-align:center;
+}
+.stat b{display:block;font-size:1.5rem;color:var(--music);}
+.stat span{font-size:.78rem;color:var(--muted);}
+.time-group{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:12px;}
+.time-group label{display:flex;flex-direction:column;font-size:.8rem;color:var(--muted);}
+.time-group input{width:80px;padding:8px;border:1px solid var(--line);border-radius:8px;font-size:1rem;margin-top:4px;}
+
+/* ===== 周测 ===== */
+.result-box{
+  text-align:center;padding:24px;background:linear-gradient(160deg,#fff,#f7f3ee);
+  border-radius:var(--radius);border:1px solid var(--line);
+}
+.result-score{font-size:2.6rem;font-weight:900;color:var(--brand);}
+.result-msg{font-size:1.05rem;margin:8px 0 14px;}
+.rank-up{color:var(--good);font-weight:700;}
+
+/* ===== 统计 ===== */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;}
+.kpi b{display:block;font-size:1.8rem;color:var(--brand);}
+.kpi span{font-size:.8rem;color:var(--muted);}
+.streak{font-size:.9rem;margin-top:8px;}
+
+/* ===== 弹窗/提示 ===== */
+.modal-mask{
+  position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;
+  z-index:100;padding:16px;
+}
+.modal{
+  background:#fff;border-radius:var(--radius);max-width:520px;width:100%;padding:22px;
+  max-height:82vh;overflow-y:auto;box-shadow:0 10px 40px rgba(0,0,0,.25);
+}
+.toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;
+  padding:12px 22px;border-radius:12px;font-weight:600;z-index:200;box-shadow:0 4px 20px rgba(0,0,0,.3);
+}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;}
+.emoji-big{font-size:2.2rem;}
+
+.footer{text-align:center;color:var(--muted);font-size:.8rem;padding:20px;}
+@media(max-width:640px){
+  .tabbar{top:auto;position:static;}
+  .topbar{position:static;}
+}
+</style>
+</head>
+<body>
+<body>
+<script>
+/* =====================================================
+   艺考冲刺营 · 文科历史 · 长笛生专属  v1.0
+   全部数据保存在浏览器 localStorage，无需服务器
+   ===================================================== */
+(function () {
+'use strict';
+
+/* ================= 常量 ================= */
+var LS_KEY = 'gaokao-arts-chongci-v1';
+
+var GAOKAO  = new Date('2027-06-07T09:00:00+08:00'); // 2027 高考
+var TONGKAO = new Date('2027-01-05T08:00:00+08:00'); // 省统考（预计，以本省通知为准）
+var XIAOKAO = new Date('2027-02-20T08:00:00+08:00'); // 校考（预计）
+
+var QUOTES = [
+  '乾坤未定，你我皆是黑马。',
+  '每天练琴一小时，离梦想近一步。',
+  '历史不是背出来的，是串起来的。',
+  '少玩十分钟手机，多背十个历史年份。',
+  '高考是场马拉松，艺考是段冲刺，都要咬牙。',
+  '你现在偷的懒，都会变成考场的泪。',
+  '把时间轴画在脑子里，历史就活了。',
+  '长笛是你的武器，文化课是你的铠甲。',
+  '坚持的人，运气都不会太差。',
+  '今天多学一点，明天多一分从容。',
+  '弱项不是短板，是你最大的提分空间。',
+  '笛声悠扬，笔下有光，未来可期。'
+];
+
+/* ================= 默认任务模板 ================= */
+var DEFAULT_TASKS = [
+  { title: '语文：文言文阅读 + 古诗默写',     meta: '40分钟 · 课本+真题',         badge: 'quest' },
+  { title: '数学：基础小题限时训练',           meta: '40分钟 · 选择+填空',         badge: 'quest' },
+  { title: '英语：单词50个 + 阅读1篇',         meta: '40分钟 · 高频词',            badge: 'quest' },
+  { title: '政治：背诵框架 + 选择10道',        meta: '30分钟',                     badge: 'quest' },
+  { title: '历史：时间轴记忆 + 材料题2道（弱项必做）', meta: '45分钟 · 历史专属',    badge: 'hist'  },
+  { title: '地理：自然地理专题',               meta: '30分钟',                     badge: 'quest' },
+  { title: '长笛：基本功 + 练习曲/乐曲',       meta: '90分钟 · 艺考曲目',          badge: 'music' }
+];
+
+/* ================= 历史闯关题库 ================= */
+var STAGES = [
+  {
+    id: 'ancient', name: '中国古代史', emoji: '🏺',
+    pairs: [
+      ['秦统一六国', '公元前221年'],
+      ['科举制创立', '隋朝'],
+      ['三省六部制', '唐朝'],
+      ['行省制度', '元朝'],
+      ['郑和下西洋', '明朝'],
+      ['军机处设立', '清朝'],
+      ['百家争鸣', '春秋战国'],
+      ['罢黜百家独尊儒术', '汉武帝时期']
+    ],
+    qa: [
+      { q: '我国历史上第一个统一的中央集权封建王朝是？',
+        opts: ['夏朝', '秦朝', '汉朝', '隋朝'], ans: 1,
+        explain: '公元前221年，秦王嬴政统一六国建立秦朝，确立中央集权制度。' },
+      { q: '科举制正式创立于哪个朝代？',
+        opts: ['汉朝', '隋朝', '唐朝', '宋朝'], ans: 1,
+        explain: '隋炀帝设进士科，科举制正式形成；唐朝进一步完善。' },
+      { q: '唐朝三省六部制中，负责审议政令的是？',
+        opts: ['中书省', '门下省', '尚书省', '枢密院'], ans: 1,
+        explain: '中书省草拟决策、门下省审议、尚书省执行。' },
+      { q: '明朝废除丞相制度的皇帝是？',
+        opts: ['明太祖朱元璋', '明成祖朱棣', '康熙帝', '雍正帝'], ans: 0,
+        explain: '明太祖朱元璋废丞相、权分六部；内阁始于明成祖朱棣。' },
+      { q: '清朝军机处的设立标志着？',
+        opts: ['丞相制度恢复', '君主专制达到顶峰', '中央集权削弱', '地方割据形成'], ans: 1,
+        explain: '雍正帝设军机处，跪受笔录、上传下达，君主专制空前强化。' }
+    ]
+  },
+  {
+    id: 'modern', name: '中国近现代史', emoji: '📜',
+    pairs: [
+      ['鸦片战争', '1840年'],
+      ['甲午战争', '1894年'],
+      ['戊戌变法', '1898年'],
+      ['辛亥革命', '1911年'],
+      ['五四运动', '1919年'],
+      ['中国共产党成立', '1921年'],
+      ['七七事变', '1937年'],
+      ['十一届三中全会', '1978年']
+    ],
+    qa: [
+      { q: '中国近代史的开端是？',
+        opts: ['鸦片战争', '太平天国运动', '洋务运动', '甲午战争'], ans: 0,
+        explain: '1840年鸦片战争后，中国开始沦为半殖民地半封建社会。' },
+      { q: '《马关条约》签订于哪次战争之后？',
+        opts: ['鸦片战争', '第二次鸦片战争', '甲午战争', '八国联军侵华'], ans: 2,
+        explain: '1895年甲午战败，清政府签订《马关条约》，割台湾、赔巨款。' },
+      { q: '新民主主义革命的开端是？',
+        opts: ['辛亥革命', '新文化运动', '五四运动', '南昌起义'], ans: 2,
+        explain: '1919年五四运动，工人阶级登上历史舞台，标志着新民主主义革命的开端。' },
+      { q: '中国共产党成立的标志是？',
+        opts: ['中共一大召开', '南昌起义', '遵义会议', '开国大典'], ans: 0,
+        explain: '1921年7月，中共一大在上海（后转嘉兴南湖）召开，标志中国共产党成立。' },
+      { q: '1978年十一届三中全会作出的伟大决策是？',
+        opts: ['土地改革', '改革开放', '第一个五年计划', '人民公社化运动'], ans: 1,
+        explain: '全会把工作重心转移到经济建设上来，实行改革开放，是伟大历史转折。' }
+    ]
+  },
+  {
+    id: 'world', name: '世界史', emoji: '🌍',
+    pairs: [
+      ['文艺复兴', '14-16世纪 意大利'],
+      ['新航路开辟', '15-16世纪'],
+      ['英国《权利法案》', '1689年'],
+      ['法国大革命', '1789年'],
+      ['第一次工业革命', '18世纪60年代'],
+      ['俄国十月革命', '1917年'],
+      ['罗斯福新政', '1933年'],
+      ['苏联解体', '1991年']
+    ],
+    qa: [
+      { q: '文艺复兴运动首先兴起于？',
+        opts: ['英国', '法国', '意大利', '德国'], ans: 2,
+        explain: '14世纪兴起于意大利，核心思想是人文主义。' },
+      { q: '被誉为"发现新大陆"的航海家是？',
+        opts: ['迪亚士', '达·伽马', '哥伦布', '麦哲伦'], ans: 2,
+        explain: '1492年哥伦布横渡大西洋到达美洲（他以为是印度）。' },
+      { q: '法国大革命爆发的标志是？',
+        opts: ['攻占巴士底狱', '颁布《人权宣言》', '拿破仑称帝', '三级会议召开'], ans: 0,
+        explain: '1789年7月14日巴黎人民攻占巴士底狱，革命爆发。' },
+      { q: '第一次工业革命开始的标志性发明是？',
+        opts: ['改良蒸汽机', '珍妮纺纱机', '蒸汽机车', '电灯'], ans: 1,
+        explain: '1765年哈格里夫斯发明珍妮纺纱机，工业革命开始；瓦特改良蒸汽机是其标志。' },
+      { q: '两极格局（冷战）结束的标志是？',
+        opts: ['杜鲁门主义出台', '华约成立', '苏联解体', '柏林墙倒塌'], ans: 2,
+        explain: '1991年苏联解体，两极格局终结，冷战结束。' }
+    ]
+  }
+];
+
+/* ================= 周测题库（文综混合） ================= */
+var QUIZ = [
+  { q: '中国半殖民地半封建社会完全形成的标志是？',
+    opts: ['《南京条约》', '《马关条约》', '《辛丑条约》', '《北京条约》'], ans: 2,
+    explain: '1901年《辛丑条约》签订，清政府完全成为"洋人的朝廷"，社会完全沦为半殖民地半封建。' },
+  { q: '我国的根本政治制度是？',
+    opts: ['多党合作和政治协商制度', '人民代表大会制度', '民族区域自治制度', '基层群众自治制度'], ans: 1,
+    explain: '人民代表大会制度是我国的根本政治制度；基本政治制度包括多党合作、民族区域自治、基层群众自治。' },
+  { q: '地球自转产生的地理现象是？',
+    opts: ['昼夜长短变化', '四季更替', '昼夜交替', '正午太阳高度变化'], ans: 2,
+    explain: '自转产生昼夜交替；公转产生四季更替和昼夜长短变化。' },
+  { q: '中共历史上生死攸关的转折点是？',
+    opts: ['八七会议', '遵义会议', '瓦窑堡会议', '七届二中全会'], ans: 1,
+    explain: '1935年遵义会议，事实上确立了毛泽东的领导地位，挽救了党和红军。' },
+  { q: '货币的本质是？',
+    opts: ['商品', '一般等价物', '价值符号', '使用价值'], ans: 1,
+    explain: '货币是从商品中分离出来固定充当一般等价物的商品，本质是一般等价物。' },
+  { q: '我国冬季南北温差大的主要原因是？',
+    opts: ['海陆位置', '纬度因素', '地形因素', '洋流因素'], ans: 1,
+    explain: '我国南北跨纬度广，冬季太阳直射南半球，纬度越高白昼越短、正午太阳高度越小，温差大。' },
+  { q: '启蒙运动的核心思想是？',
+    opts: ['人文主义', '理性主义', '自由主义', '民族主义'], ans: 1,
+    explain: '启蒙运动倡导理性主义，反对封建专制和教会神权，代表人物有伏尔泰、孟德斯鸠、卢梭、康德。' },
+  { q: '我国的国体（国家性质）是？',
+    opts: ['人民民主专政的社会主义国家', '人民代表大会制度', '多党合作制度', '联邦制国家'], ans: 0,
+    explain: '国体是人民民主专政的社会主义国家；政体（政权组织形式）是人民代表大会制度。' }
+];
+
+/* ================= 模考科目配置 ================= */
+var SCORE_KEYS = [
+  { key: 'yuwen', name: '语文' }, { key: 'shuxue', name: '数学' },
+  { key: 'yingyu', name: '英语' }, { key: 'zhengzhi', name: '政治' },
+  { key: 'lishi', name: '历史' }, { key: 'dili', name: '地理' }
+];
+var DEFAULT_TARGETS = { '语文': 115, '数学': 110, '英语': 120, '政治': 80, '历史': 75, '地理': 80 };
+
+/* ================= 状态管理 ================= */
+function defaultState() {
+  return {
+    tasks: {},     // date -> [{title,meta,badge,done}]
+    music: {},     // date -> {warmup,piece,sight}
+    history: {},   // stageId -> {pairsDone,totalPairs,qaDone,qaCorrect,qaTotal}
+    quiz: [],      // [{date,score}]
+    scores: [],    // [{date, subs:{语文:..}, total}]
+    mistakes: [],  // [{id, date, point, reason}]
+    targets: null  // {语文:目标分,...}
+  };
+}
+function load() {
+  try {
+    var raw = localStorage.getItem(LS_KEY);
+    if (raw) {
+      var s = JSON.parse(raw);
+      if (s && typeof s === 'object') return s;
+    }
+  } catch (e) {}
+  return defaultState();
+}
+function save() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
+}
+var state = load();
+
+/* ================= 工具函数 ================= */
+function pad(n) { return n < 10 ? '0' + n : '' + n; }
+function dateStr(d) {
+  return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+}
+function todayStr() { return dateStr(new Date()); }
+function daysUntil(target) {
+  var diff = target - new Date();
+  return Math.max(0, Math.floor(diff / 86400000));
+}
+function esc(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function shuffle(a) {
+  var arr = a.slice();
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  }
+  return arr;
+}
+function $(id) { return document.getElementById(id); }
+function toast(msg) {
+  var el = $('toast');
+  el.textContent = msg;
+  el.hidden = false;
+  clearTimeout(toast._t);
+  toast._t = setTimeout(function () { el.hidden = true; }, 2200);
+}
+
+/* ================= 任务 ================= */
+function getTasks(date) {
+  if (!state.tasks[date]) {
+    state.tasks[date] = DEFAULT_TASKS.map(function (t) {
+      return { title: t.title, meta: t.meta, badge: t.badge, done: false };
+    });
+    save();
+  }
+  return state.tasks[date];
+}
+function tasksDoneCount(date) {
+  var list = state.tasks[date];
+  if (!list) return 0;
+  return list.filter(function (t) { return t.done; }).length;
+}
+function checkinDays() {
+  var n = 0;
+  for (var d in state.tasks) {
+    if (state.tasks[d].some(function (t) { return t.done; })) n++;
+  }
+  return n;
+}
+function streakDays() {
+  var n = 0, d = new Date();
+  while (true) {
+    var key = dateStr(d);
+    var list = state.tasks[key];
+    if (list && list.some(function (t) { return t.done; })) { n++; }
+    else if (n > 0 || key !== todayStr()) break;
+    else { d.setDate(d.getDate() - 1); continue; }
+    d.setDate(d.getDate() - 1);
+  }
+  return n;
+}
+function musicTotalFor(date) {
+  var m = state.music[date];
+  if (!m) return 0;
+  return (m.warmup || 0) + (m.piece || 0) + (m.sight || 0);
+}
+function musicWeekTotal() {
+  var n = 0, d = new Date();
+  for (var i = 0; i < 7; i++) {
+    n += musicTotalFor(dateStr(d));
+    d.setDate(d.getDate() - 1);
+  }
+  return n;
+}
+function musicStreak() {
+  var n = 0, d = new Date();
+  while (true) {
+    var t = musicTotalFor(dateStr(d));
+    if (t > 0) n++;
+    else break;
+    d.setDate(d.getDate() - 1);
+  }
+  return n;
+}
+function musicAllTotal() {
+  var n = 0;
+  for (var d in state.music) n += musicTotalFor(d);
+  return n;
+}
+function getTargets() {
+  if (!state.targets) state.targets = JSON.parse(JSON.stringify(DEFAULT_TARGETS));
+  return state.targets;
+}
+function scoreTotal(subs) {
+  var n = 0;
+  SCORE_KEYS.forEach(function (k) { n += parseInt(subs[k.name], 10) || 0; });
+  return n;
+}
+
+/* ================= 倒计时 ================= */
+function cdHTML(target, label) {
+  var diff = target - new Date();
+  if (diff <= 0) {
+    return '<span class="cd"><b>已到</b>' + label + '</span>';
+  }
+  var d = Math.floor(diff / 86400000);
+  var h = Math.floor(diff % 86400000 / 3600000);
+  var m = Math.floor(diff % 3600000 / 60000);
+  var s = Math.floor(diff % 60000 / 1000);
+  var txt = d > 0 ? d + '天' + h + '时' : (h > 0 ? h + '时' + m + '分' : m + '分' + s + '秒');
+  return '<span class="cd"><b>' + txt + '</b>' + label + '</span>';
+}
+function renderCountdowns() {
+  $('countdowns').innerHTML =
+    cdHTML(GAOKAO, '距高考') +
+    cdHTML(TONGKAO, '距统考') +
+    cdHTML(XIAOKAO, '距校考');
+}
+
+/* ================= 首页 ================= */
+function renderHome() {
+  var h = new Date().getHours();
+  var greet = h < 6 ? '夜深了，早点休息' :
+              h < 12 ? '上午好，开工！' :
+              h < 14 ? '中午好，记得午休' :
+              h < 18 ? '下午好，继续加油' : '晚上好，冲刺时刻';
+  var dayTasks = getTasks(todayStr());
+  var done = dayTasks.filter(function (t) { return t.done; }).length;
+  var pct = dayTasks.length ? Math.round(done / dayTasks.length * 100) : 0;
+  var quote = QUOTES[Math.floor(Date.now() / 86400000) % QUOTES.length];
+
+  var html = '';
+  html += '<div class="card">';
+  html += '<div class="emoji-big">🎯</div><h2>' + greet + '</h2>';
+  html += '<p class="sub">' + quote + '</p>';
+  html += '<div style="display:flex;justify-content:space-between;font-size:.9rem;font-weight:700;">';
+  html += '<span>今日打卡</span><span class="pct">' + done + '/' + dayTasks.length + ' · ' + pct + '%</span></div>';
+  html += '<div class="bar-wrap"><div class="bar-fill" style="width:' + pct + '%"></div></div>';
+  html += '<p class="streak">🔥 连续打卡 <b>' + streakDays() + '</b> 天 · 累计 ' + checkinDays() + ' 天 · 距离高考仅剩 <b>' + daysUntil(GAOKAO) + '</b> 天</p>';
+  html += '</div>';
+
+  html += '<div class="grid2">';
+  html += '<div class="card"><h2>⚠️ 历史弱项提醒</h2><p class="sub">每天 45 分钟，坚持到高考，历史至少 +15 分</p>';
+  html += '<p>📌 每日必做：<br>① 时间轴记忆 10 分钟<br>② 材料题 2 道（按"读题→分层→结合所学"）<br>③ 错题整理进错题本</p></div>';
+  html += '<div class="card"><h2>🎼 长笛今日目标</h2><p class="sub">文化课再忙，专业不能断</p>';
+  html += '<p>📌 基本功（长音/音阶）20 分钟<br>📌 练习曲 30 分钟<br>📌 艺考曲目 40 分钟<br>📌 视唱练耳·乐理 15 分钟</p></div>';
+  html += '</div>';
+
+  html += '<div class="card"><h2>📋 今日任务</h2><p class="sub">点勾即打卡，数据自动保存</p><div id="today-tasks">';
+  dayTasks.forEach(function (t, i) {
+    var badgeName = t.badge === 'hist' ? '历史弱项' : t.badge === 'music' ? '长笛' : '文化课';
+    html += '<div class="task' + (t.done ? ' done' : '') + '">';
+    html += '<input type="checkbox" data-task="' + i + '"' + (t.done ? ' checked' : '') + '>';
+    html += '<div class="t-body"><div class="t-title">' + esc(t.title) +
+            '<span class="badge ' + t.badge + '">' + badgeName + '</span></div>';
+    html += '<div class="t-meta">' + esc(t.meta) + '</div></div>';
+    html += '<span class="pill">' + (t.done ? '✅ 完成' : '待完成') + '</span>';
+    html += '</div>';
+  });
+  html += '<button class="btn ghost" id="reset-tasks" style="margin-top:4px;">↺ 重置今日任务</button>';
+  html += '</div></div>';
+
+  $('view-home').innerHTML = html;
+}
+
+/* ================= 冲刺计划 ================= */
+var WEEK_PLAN = [
+  { day: '周一', focus: '文化课为主 · 长笛90分钟', items: ['语文：文言文 + 默写', '数学：函数专题', '政治：经济生活', '长笛：基本功 + 练习曲'] },
+  { day: '周二', focus: '文化课为主 · 长笛90分钟', items: ['数学：数列专题', '英语：阅读 + 单词', '历史：中国古代史（弱项）', '长笛：基本功 + 艺考曲目'] },
+  { day: '周三', focus: '文综重点 · 长笛90分钟', items: ['语文：现代文阅读', '地理：自然地理', '历史：中国近现代史（弱项）', '长笛：基本功 + 视唱练耳'] },
+  { day: '周四', focus: '文化课为主 · 长笛90分钟', items: ['数学：立体几何', '英语：完形 + 写作', '政治：政治生活', '长笛：基本功 + 艺考曲目'] },
+  { day: '周五', focus: '文综重点 · 长笛120分钟', items: ['语文：作文素材积累', '地理：人文地理', '历史：世界史（弱项）', '长笛：艺考曲目完整演奏'] },
+  { day: '周六', focus: '周测日 · 长笛60分钟', items: ['文综周测 1 套（限时）', '错题整理 + 复盘', '长笛：放松练习，保持手感'] },
+  { day: '周日', focus: '休息复盘 · 长笛30分钟', items: ['本周复盘 + 下周计划', '整理错题本', '长笛：视唱练耳 + 乐理'] }
+];
+
+function renderPlan() {
+  var html = '';
+  html += '<div class="card"><h2>🗓️ 一周冲刺计划</h2><p class="sub">文化课与长笛两手抓 · 周六周测检验 · 周日复盘</p></div>';
+
+  WEEK_PLAN.forEach(function (w, i) {
+    html += '<div class="card week-card' + (i === 5 ? ' music-week' : '') + '">';
+    html += '<div class="week-head"><h3>' + w.day + '</h3>' +
+            '<span class="week-tag ' + (i === 5 ? 'music' : 'hist') + '">' + w.focus + '</span></div>';
+    html += '<ul class="day-list">';
+    w.items.forEach(function (it) {
+      html += '<li>' + it.replace(/（.*）/, function (m) { return '<b>' + m + '</b>'; }) + '</li>';
+    });
+    html += '</ul></div>';
+  });
+
+  html += '<div class="card"><h2>🎯 每周目标</h2>';
+  html += '<div class="weekly-goal">✅ 历史时间轴完整过 1 遍　✅ 完成 1 套文综卷<br>✅ 长笛艺考曲目完整演奏 2 遍　✅ 整理 20 道错题</div></div>';
+
+  html += '<div class="card"><h2>⏰ 艺考生作息参考</h2><ul class="day-list">';
+  [
+    '6:40 起床 · 早读 40 分钟（英语单词 / 语文古诗文）',
+    '8:00–12:00 文化课（数学、语文为主）',
+    '14:00–17:30 文综（历史弱项优先安排）',
+    '17:30–19:00 长笛：基本功 + 练习曲',
+    '19:30–21:30 文化课作业 + 错题整理',
+    '21:30–22:00 长笛晚练（艺考曲目）',
+    '22:00–22:40 历史：时间轴 + 材料题（弱项冲刺）',
+    '23:00 睡觉，保证 7 小时睡眠'
+  ].forEach(function (s) { html += '<li>' + s + '</li>'; });
+  html += '</ul></div>';
+
+  $('view-plan').innerHTML = html;
+}
+
+/* ================= 历史闯关 ================= */
+var histView = { stage: null, match: null };
+
+function stageProg(id) {
+  return state.history[id] || { pairsDone: 0, totalPairs: 0, qaDone: false, qaCorrect: 0, qaTotal: 0 };
+}
+function saveStageProg(id, p) { state.history[id] = p; save(); }
+
+function renderHistory() {
+  var html = '';
+  html += '<div class="section-title"><span class="bar"></span>历史闯关 · 弱项专攻</div>';
+  html += '<div class="card"><p class="sub">先玩"配对游戏"串时间轴，再做选择题巩固。闯关进度自动保存。</p>';
+  html += '<div class="stage-pick">';
+  STAGES.forEach(function (st) {
+    var p = stageProg(st.id);
+    var label = st.emoji + ' ' + st.name +
+      (p.pairsDone === st.pairs.length ? ' ✅' : '');
+    html += '<button class="stage-btn' + (histView.stage === st.id ? ' active' : '') + '" data-stage="' + st.id + '">' + label + '</button>';
+  });
+  html += '</div></div>';
+
+  var st = STAGES.filter(function (s) { return s.id === histView.stage; })[0] || null;
+  if (st) {
+    html += renderStageDetail(st);
+  } else {
+    html += '<div class="card" style="text-align:center;"><div class="emoji-big">🏺</div>';
+    html += '<h2>选择上面一个关卡开始闯关</h2><p class="sub">中国古代史 → 中国近现代史 → 世界史，按顺序推进</p></div>';
+  }
+
+  /* --- 历史错题本 --- */
+  html += '<div class="card"><h2>📕 历史错题本</h2><p class="sub">记录错题知识点和错误原因，考前反复看</p>';
+  html += '<div style="display:flex;gap:8px;flex-wrap:wrap;">';
+  html += '<input id="mk-point" placeholder="知识点/题目（如：洋务运动失败的根源）" style="flex:2;min-width:200px;padding:10px;border:1px solid var(--line);border-radius:10px;font-size:.9rem;">';
+  html += '<input id="mk-reason" placeholder="错误原因（时间混淆/概念不清…）" style="flex:2;min-width:200px;padding:10px;border:1px solid var(--line);border-radius:10px;font-size:.9rem;">';
+  html += '<button class="btn hist" id="add-mistake">＋ 添加</button></div>';
+  html += '<div id="mistake-list">';
+  if (!state.mistakes.length) html += '<p class="sub" style="margin-top:10px;">还没有错题记录，做错题就记下来</p>';
+  state.mistakes.slice().reverse().forEach(function (m) {
+    html += '<div class="task"><div class="t-body"><div class="t-title">' + esc(m.point) + '</div>' +
+            '<div class="t-meta">' + m.date + ' · ' + esc(m.reason || '未填原因') + '</div></div>' +
+            '<button class="btn ghost" data-del-mistake="' + m.id + '" style="padding:6px 12px;flex-shrink:0;">🗑 删除</button></div>';
+  });
+  html += '</div></div>';
+
+  $('view-history').innerHTML = html;
+  if (st && histView.match) buildMatchChips(st);
+}
+
+function renderStageDetail(st) {
+  var p = stageProg(st.id);
+  var html = '';
+
+  /* --- 配对游戏 --- */
+  var allMatched = p.pairsDone >= st.pairs.length;
+  html += '<div class="card"><h2>' + st.emoji + ' 第一关 · 时间轴配对</h2>';
+  html += '<p class="sub">点两个词条，配对成功变绿。全部配对完成即通关。</p>';
+  html += '<div class="bar-wrap"><div class="bar-fill" style="width:' +
+          Math.round((p.pairsDone / st.pairs.length) * 100) + '%"></div></div>';
+  if (allMatched) {
+    html += '<div class="game-feedback">🎉 本关已通关！再玩一遍巩固记忆：</div>';
+  }
+  html += '<div id="match-area"></div>';
+  html += '<div class="game-feedback" id="match-feedback"></div>';
+  html += '<button class="btn hist" id="restart-match">↺ 重新配对</button>';
+  html += '</div>';
+
+  /* --- 选择题 --- */
+  html += '<div class="card"><h2>📝 第二关 · 选择题 5 道</h2><p class="sub">答完自动判分，答案解析即时显示。</p>';
+  if (p.qaDone) {
+    html += '<p>本次成绩：<b class="pct">' + p.qaCorrect + ' / ' + p.qaTotal + '</b> 正确</p>';
+  }
+  html += '<div id="qa-area">';
+  st.qa.forEach(function (q, qi) {
+    html += '<div class="qa-box" data-q="' + qi + '">';
+    html += '<div class="qa-question">' + (qi + 1) + '. ' + q.q + '</div>';
+    html += '<div class="qa-opts">';
+    q.opts.forEach(function (o, oi) {
+      html += '<div class="qa-opt" data-q="' + qi + '" data-opt="' + oi + '">' +
+              String.fromCharCode(65 + oi) + '. ' + esc(o) + '</div>';
+    });
+    html += '</div><div class="qa-explain" hidden></div></div>';
+  });
+  html += '</div></div>';
+
+  return html;
+}
+
+function startMatch(stageId) {
+  histView.stage = stageId;
+  var st = STAGES.filter(function (s) { return s.id === stageId; })[0];
+  var matched = new Set();
+  var p = stageProg(stageId);
+  // 已通关则清空重玩；否则保留已完成的对
+  if (p.pairsDone >= st.pairs.length) {
+    p.pairsDone = 0; p.totalPairs = st.pairs.length;
+    saveStageProg(stageId, p);
+  } else {
+    // 无法恢复中途状态，重新开始
+    p.pairsDone = 0; p.totalPairs = st.pairs.length;
+    saveStageProg(stageId, p);
+  }
+  histView.match = { matched: matched, selected: [] };
+  renderHistory();
+  buildMatchChips(st);
+}
+
+function buildMatchChips(st) {
+  var area = $('match-area');
+  if (!area) return;
+  var chips = [];
+  st.pairs.forEach(function (pair, i) {
+    chips.push({ pair: i, side: 0, text: pair[0] });
+    chips.push({ pair: i, side: 1, text: pair[1] });
+  });
+  var order = shuffle(chips);
+  var m = histView.match;
+  var html = '<div class="items">';
+  order.forEach(function (c) {
+    var cls = 'item-chip' + (m && m.matched.has(String(c.pair)) ? ' correct' : '');
+    html += '<div class="' + cls + '" data-pair="' + c.pair + '" data-side="' + c.side + '">' +
+            esc(c.text) + '</div>';
+  });
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function onMatchChipClick(el) {
+  var st = STAGES.filter(function (s) { return s.id === histView.stage; })[0];
+  if (!st || !histView.match) return;
+  var m = histView.match;
+  if (m.matched.has(el.dataset.pair)) return;
+  if (el.classList.contains('selected') || el.classList.contains('correct')) return;
+
+  el.classList.add('selected');
+  m.selected.push(el);
+
+  if (m.selected.length === 2) {
+    var a = m.selected[0], b = m.selected[1];
+    if (a.dataset.pair === b.dataset.pair) {
+      a.classList.remove('selected'); b.classList.remove('selected');
+      a.classList.add('correct'); b.classList.add('correct');
+      m.matched.add(a.dataset.pair);
+      m.selected = [];
+      var p = stageProg(st.id);
+      p.pairsDone = m.matched.size; p.totalPairs = st.pairs.length;
+      saveStageProg(st.id, p);
+      $('match-feedback').textContent = '✅ 配对成功！还剩 ' + (st.pairs.length - m.matched.size) + ' 对';
+      var bar = document.querySelector('#view-history .card .bar-fill');
+      if (bar) bar.style.width = Math.round((m.matched.size / st.pairs.length) * 100) + '%';
+      if (m.matched.size === st.pairs.length) {
+        $('match-feedback').textContent = '🎉 太棒了！时间轴配对全部完成！继续做选择题吧';
+        toast('🎉 时间轴配对通关！');
+      }
+    } else {
+      a.classList.add('wrong'); b.classList.add('wrong');
+      $('match-feedback').textContent = '❌ 不对哦，再想想';
+      var self = this;
+      setTimeout(function () {
+        a.classList.remove('selected', 'wrong');
+        b.classList.remove('selected', 'wrong');
+        m.selected = [];
+      }, 600);
+    }
+  }
+}
+
+function onQAClick(el) {
+  var st = STAGES.filter(function (s) { return s.id === histView.stage; })[0];
+  if (!st) return;
+  var qi = +el.dataset.q, oi = +el.dataset.opt;
+  var q = st.qa[qi];
+  var box = el.closest('.qa-box');
+  if (box.dataset.locked === '1') return;
+
+  box.dataset.locked = '1';
+  var opts = box.querySelectorAll('.qa-opt');
+  opts.forEach(function (o) { o.style.pointerEvents = 'none'; });
+  var correct = oi === q.ans;
+  if (correct) el.classList.add('correct');
+  else { el.classList.add('wrong'); opts[q.ans].classList.add('correct'); }
+  var exp = box.querySelector('.qa-explain');
+  exp.textContent = (correct ? '✅ 回答正确！' : '❌ 正确答案：' + String.fromCharCode(65 + q.ans) + '. ' + q.opts[q.ans] + '。') + q.explain;
+  exp.hidden = false;
+
+  // 统计本关完成情况
+  var all = document.querySelectorAll('#qa-area .qa-box');
+  var answered = 0, correctN = 0;
+  all.forEach(function (b) {
+    if (b.dataset.locked === '1') {
+      answered++;
+      if (b.querySelector('.qa-opt.correct') && !b.querySelector('.qa-opt.wrong')) correctN++;
+    }
+  });
+  var p = stageProg(st.id);
+  p.qaCorrect = correctN; p.qaTotal = st.qa.length;
+  if (answered === all.length) {
+    p.qaDone = true;
+    saveStageProg(st.id, p);
+    var msg = correctN === st.qa.length ? '🏆 全对！历史稳了！' :
+              correctN >= 3 ? '👍 不错，继续巩固！' : '💪 有进步空间，回看解析再战！';
+    toast('选择题完成：' + correctN + '/' + st.qa.length + ' ' + msg);
+  }
+  saveStageProg(st.id, p);
+}
+
+/* ================= 长笛艺考 ================= */
+var MUSIC_TIMELINE = [
+  ['2026.10–11', '各省艺考报名 · 统考大纲公布'],
+  ['2026.12–2027.1', '音乐类省统考（以本省通知为准）'],
+  ['2027.1–2', '校考报名（音乐学院）'],
+  ['2027.2–3', '校考考试（曲目要求高，提前准备）'],
+  ['2027.3–4', '校考成绩公布 · 全力冲刺文化课'],
+  ['2027.6.7–8', '全国高考'],
+  ['2027.6月底', '出分 · 志愿填报（艺术类提前批）']
+];
+
+function renderMusic() {
+  var today = todayStr();
+  var m = state.music[today] || { warmup: 0, piece: 0, sight: 0 };
+  var weekTotal = musicWeekTotal();
+  var allTotal = musicAllTotal();
+
+  var html = '';
+  html += '<div class="card"><h2>🎼 长笛练习打卡</h2><p class="sub">记录每天的练习分钟数，保持专业手感</p>';
+  html += '<div class="stat-grid">';
+  html += '<div class="stat"><b>' + musicTotalFor(today) + '</b><span>今日练笛(分钟)</span></div>';
+  html += '<div class="stat"><b>' + weekTotal + '</b><span>本周累计(分钟)</span></div>';
+  html += '<div class="stat"><b>' + musicStreak() + '</b><span>连续练笛(天)</span></div>';
+  html += '<div class="stat"><b>' + allTotal + '</b><span>累计(分钟)</span></div>';
+  html += '</div>';
+
+  html += '<div class="time-group">';
+  html += '<label>基本功/音阶(分钟)<input type="number" id="m-warmup" min="0" value="' + (m.warmup || '') + '"></label>';
+  html += '<label>练习曲/乐曲(分钟)<input type="number" id="m-piece" min="0" value="' + (m.piece || '') + '"></label>';
+  html += '<label>视唱练耳/乐理(分钟)<input type="number" id="m-sight" min="0" value="' + (m.sight || '') + '"></label>';
+  html += '</div>';
+  html += '<button class="btn music" id="save-music">💾 保存今日练习</button>';
+
+  /* 近7天柱状图 */
+  html += '<h3>近 7 天练习时长</h3><div style="display:flex;align-items:flex-end;gap:8px;height:80px;margin-top:8px;">';
+  var d = new Date();
+  for (var i = 6; i >= 0; i--) {
+    var dd = new Date(d); dd.setDate(d.getDate() - i);
+    var mins = musicTotalFor(dateStr(dd));
+    var hgt = Math.max(4, Math.round(mins / 150 * 70));
+    html += '<div style="flex:1;text-align:center;"><div style="width:100%;max-width:34px;margin:0 auto;background:var(--music);border-radius:6px 6px 0 0;height:' + hgt + 'px;opacity:.9;" title="' + mins + '分钟"></div>' +
+            '<div style="font-size:.68rem;color:var(--muted);margin-top:4px;">' + (dd.getMonth() + 1) + '/' + dd.getDate() + '</div></div>';
+  }
+  html += '</div></div>';
+
+  html += '<div class="card"><h2>📅 艺考时间线（2027届）</h2><p class="sub">具体时间以本省教育考试院通知为准</p><ul class="day-list">';
+  MUSIC_TIMELINE.forEach(function (t) {
+    html += '<li><b>' + t[0] + '</b>　' + t[1] + '</li>';
+  });
+  html += '</ul></div>';
+
+  html += '<div class="card"><h2>💡 艺考生文化课策略</h2><ul class="day-list">';
+  [
+    '统考/校考前：专业为主，但每天至少留 2 小时文化课，防止"手生"',
+    '历史弱项从暑假开始打基础：时间轴 + 阶段特征，先框架后细节',
+    '校考结束后（3月底）全力冲刺文化课，艺考文化线通常低于普通类，但名校要求不低',
+    '文综是艺考生的提分主战场：历史背框架、政治背术语、地理练读图',
+    '保持每周 1 次文综周测，适应考场节奏'
+  ].forEach(function (s) { html += '<li>' + s + '</li>'; });
+  html += '</ul></div>';
+
+  $('view-music').innerHTML = html;
+}
+
+/* ================= 周测 ================= */
+function renderQuiz() {
+  var html = '';
+  html += '<div class="card"><h2>✍️ 文综周测（8题）</h2>';
+  html += '<p class="sub">历史 · 政治 · 地理混合，做完点"交卷"自动判分。先选答案，交卷前可修改。</p>';
+  html += '<div id="quiz-area">';
+  QUIZ.forEach(function (q, qi) {
+    html += '<div class="qa-box" data-q="' + qi + '">';
+    html += '<div class="qa-question">' + (qi + 1) + '. ' + q.q + '</div>';
+    html += '<div class="qa-opts">';
+    q.opts.forEach(function (o, oi) {
+      html += '<div class="qa-opt" data-q="' + qi + '" data-opt="' + oi + '">' +
+              String.fromCharCode(65 + oi) + '. ' + esc(o) + '</div>';
+    });
+    html += '</div><div class="qa-explain" hidden></div></div>';
+  });
+  html += '</div>';
+  html += '<div style="display:flex;gap:10px;">';
+  html += '<button class="btn big" id="submit-quiz" style="flex:1;">📝 交卷判分</button>';
+  html += '<button class="btn ghost" id="redo-quiz">↺ 重做</button>';
+  html += '</div></div>';
+
+  var last = state.quiz[state.quiz.length - 1];
+  if (last) {
+    var best = Math.max.apply(null, state.quiz.map(function (r) { return r.score; }));
+    html += '<div class="card"><h2>📊 最近成绩</h2>';
+    html += '<div class="result-box"><div class="result-score">' + last.score + ' / ' + QUIZ.length + '</div>';
+    html += '<div class="result-msg">上次周测 · ' + last.date + '</div>';
+    html += '<p>历史最高：<b class="rank-up">' + best + ' / ' + QUIZ.length + '</b></p></div></div>';
+  }
+  $('view-quiz').innerHTML = html;
+}
+
+function submitQuiz() {
+  var boxes = document.querySelectorAll('#quiz-area .qa-box');
+  var chosen = {}, score = 0;
+  boxes.forEach(function (b, qi) {
+    var sel = b.querySelector('.qa-opt.selected');
+    if (sel) chosen[qi] = +sel.dataset.opt;
+  });
+  boxes.forEach(function (b, qi) {
+    var q = QUIZ[qi];
+    b.dataset.locked = '1';
+    var opts = b.querySelectorAll('.qa-opt');
+    opts.forEach(function (o) {
+      o.style.pointerEvents = 'none';
+      var oi = +o.dataset.opt;
+      if (oi === q.ans) o.classList.add('correct');
+      else if (chosen[qi] === oi) o.classList.add('wrong');
+      if (chosen[qi] === q.ans) score++;
+    });
+    var exp = b.querySelector('.qa-explain');
+    exp.textContent = '解析：' + q.explain;
+    exp.hidden = false;
+  });
+  state.quiz.push({ date: todayStr(), score: score });
+  save();
+  var prev = state.quiz.length > 1 ? state.quiz[state.quiz.length - 2].score : -1;
+  var msg = score === QUIZ.length ? '🏆 满分！太强了！' :
+            score >= 6 ? '👍 不错，继续保持！' :
+            score >= 4 ? '💪 及格线附近，重点看解析' : '📚 别灰心，错题就是提分点';
+  var rankUp = prev >= 0 && score > prev ? ' <span class="rank-up">↑ 比上次进步！</span>' : '';
+  toast('周测得分：' + score + '/' + QUIZ.length + ' ' + msg + rankUp);
+  renderQuiz();
+}
+
+/* ================= 进度统计 ================= */
+function renderStats() {
+  var today = todayStr();
+  var doneToday = tasksDoneCount(today);
+  var totalToday = (state.tasks[today] || []).length;
+
+  /* 历史闯关完成度 */
+  var stagesDone = 0, totalStages = STAGES.length;
+  var qaRight = 0, qaAll = 0;
+  STAGES.forEach(function (st) {
+    var p = stageProg(st.id);
+    if (p.pairsDone >= st.pairs.length) stagesDone++;
+    qaRight += p.qaCorrect || 0;
+    qaAll += p.qaTotal || 0;
+  });
+
+  /* 周测 */
+  var quizAvg = 0, quizBest = 0;
+  if (state.quiz.length) {
+    quizAvg = Math.round(state.quiz.reduce(function (a, r) { return a + r.score; }, 0) / state.quiz.length * 10) / 10;
+    quizBest = Math.max.apply(null, state.quiz.map(function (r) { return r.score; }));
+  }
+
+  var html = '';
+  html += '<div class="section-title"><span class="bar"></span>进度统计</div>';
+
+  html += '<div class="kpi-grid">';
+  html += '<div class="kpi"><b>' + checkinDays() + '</b><span>累计打卡天数</span></div>';
+  html += '<div class="kpi"><b>' + streakDays() + '</b><span>当前连续打卡</span></div>';
+  html += '<div class="kpi"><b>' + stagesDone + '/' + totalStages + '</b><span>历史闯关通关</span></div>';
+  html += '<div class="kpi"><b>' + (qaAll ? Math.round(qaRight / qaAll * 100) : 0) + '%</b><span>历史题正确率</span></div>';
+  html += '<div class="kpi"><b>' + (state.quiz.length ? quizBest + '/8' : '—') + '</b><span>周测最高分</span></div>';
+  html += '<div class="kpi"><b>' + musicAllTotal() + '</b><span>累计练笛(分钟)</span></div>';
+  html += '</div>';
+
+  /* 模考成绩追踪 */
+  var targets = getTargets();
+  var tTotal = SCORE_KEYS.reduce(function (a, k) { return a + (targets[k.name] || 0); }, 0);
+  html += '<div class="card"><h2>📈 模考成绩追踪</h2><p class="sub">录入各科分数自动算总分；目标分可改。艺考生文化线约350-400，冲好学校建议总分 ' + tTotal + ' 起。</p>';
+  html += '<div class="time-group">';
+  html += '<label>考试日期<input type="date" id="sc-date" value="' + todayStr() + '" style="width:150px;"></label>';
+  SCORE_KEYS.forEach(function (k) {
+    html += '<label>' + k.name + ' 分数<input type="number" id="sc-' + k.key + '" min="0" max="150" placeholder="0"></label>';
+  });
+  html += '</div>';
+  html += '<div class="time-group">';
+  html += '<label style="justify-content:center;font-weight:700;">目标分 ↓</label>';
+  SCORE_KEYS.forEach(function (k) {
+    html += '<label>' + k.name + ' 目标<input type="number" id="tg-' + k.key + '" min="0" max="150" value="' + (targets[k.name] || 0) + '"></label>';
+  });
+  html += '</div>';
+  html += '<button class="btn" id="save-score">💾 保存本次模考</button>';
+  if (state.scores.length) {
+    html += '<h3>总分趋势（目标 ' + tTotal + '）</h3>';
+    html += '<div style="display:flex;align-items:flex-end;gap:8px;height:90px;margin-top:8px;">';
+    state.scores.slice(-6).forEach(function (r) {
+      var hgt = Math.max(6, Math.round(r.total / 750 * 80));
+      html += '<div style="flex:1;text-align:center;"><div style="width:100%;max-width:40px;margin:0 auto;background:var(--brand);border-radius:6px 6px 0 0;height:' + hgt + 'px;" title="' + r.date + '"></div>' +
+              '<div style="font-size:.68rem;color:var(--muted);margin-top:4px;">' + r.total + '</div></div>';
+    });
+    html += '</div><h3>最近记录</h3>';
+    state.scores.slice().reverse().slice(0, 5).forEach(function (r) {
+      var diff = r.total - tTotal;
+      var detail = SCORE_KEYS.map(function (k) { return k.name + ':' + (r.subs[k.name] || 0); }).join(' ');
+      html += '<div class="task"><div class="t-body"><div class="t-title">' + r.date + ' · 总分 <b class="pct">' + r.total + '</b></div>' +
+              '<div class="t-meta">' + detail + '</div></div>' +
+              '<span class="pill">' + (diff >= 0 ? '🎯 达标' : '距目标 ' + (-diff) + ' 分') + '</span></div>';
+    });
+  } else {
+    html += '<p class="sub" style="margin-top:12px;">还没有模考记录，考完试就来录入吧</p>';
+  }
+  html += '</div>';
+
+  html += '<div class="card"><h2>🏆 成就墙</h2><div class="trophy-row">';
+  var trophies = [
+    { ok: checkinDays() >= 1, t: '🎯 迈出第一步 · 首次打卡' },
+    { ok: streakDays() >= 3, t: '🔥 连续打卡 3 天' },
+    { ok: streakDays() >= 7, t: '🔥 连续打卡 7 天' },
+    { ok: stagesDone >= totalStages, t: '🏺 历史闯关全通关' },
+    { ok: quizBest >= 8, t: '🎯 周测满分' },
+    { ok: musicAllTotal() >= 500, t: '🎼 累计练笛 500 分钟' },
+    { ok: musicStreak() >= 7, t: '🎶 连续练笛 7 天' }
+  ];
+  trophies.forEach(function (tr) {
+    html += '<span class="trophy" style="' + (tr.ok ? '' : 'opacity:.35;filter:grayscale(1);') + '">' +
+            (tr.ok ? '✨ ' : '🔒 ') + tr.t + '</span>';
+  });
+  html += '</div></div>';
+
+  /* 历史闯关明细 */
+  html += '<div class="card"><h2>🏺 历史闯关明细</h2>';
+  STAGES.forEach(function (st) {
+    var p = stageProg(st.id);
+    var pd = Math.min(p.pairsDone, st.pairs.length);
+    html += '<p style="margin:10px 0 4px;font-weight:700;">' + st.emoji + ' ' + st.name + '</p>';
+    html += '<div class="bar-wrap"><div class="bar-fill" style="width:' + Math.round(pd / st.pairs.length * 100) + '%"></div></div>';
+    html += '<p class="sub">配对 ' + pd + '/' + st.pairs.length +
+            (p.qaDone ? ' · 选择题 ' + p.qaCorrect + '/' + p.qaTotal : ' · 选择题未完成') + '</p>';
+  });
+  html += '</div>';
+
+  /* 周测趋势 */
+  if (state.quiz.length) {
+    html += '<div class="card"><h2>📈 周测趋势</h2>';
+    html += '<div style="display:flex;align-items:flex-end;gap:8px;height:90px;margin-top:8px;">';
+    state.quiz.slice(-6).forEach(function (r) {
+      var hgt = Math.max(6, Math.round(r.score / 8 * 80));
+      html += '<div style="flex:1;text-align:center;"><div style="width:100%;max-width:40px;margin:0 auto;background:var(--brand);border-radius:6px 6px 0 0;height:' + hgt + 'px;"></div>' +
+              '<div style="font-size:.68rem;color:var(--muted);margin-top:4px;">' + r.score + '分</div></div>';
+    });
+    html += '</div><p class="sub">平均 ' + quizAvg + ' 分 · 共 ' + state.quiz.length + ' 次周测</p></div>';
+  }
+
+  $('view-stats').innerHTML = html;
+}
+
+/* ================= 弹窗 & 重置 ================= */
+function showResetModal() {
+  var modal = $('modal');
+  modal.innerHTML =
+    '<h2 style="margin-top:0;">⚠️ 重置全部数据</h2>' +
+    '<p>将清空所有打卡记录、历史闯关进度、练笛记录和周测成绩，且无法恢复。</p>' +
+    '<div style="display:flex;gap:10px;justify-content:flex-end;">' +
+    '<button class="btn ghost" id="modal-cancel">取消</button>' +
+    '<button class="btn" id="modal-ok" style="background:var(--bad);">确认重置</button></div>';
+  $('modal-mask').hidden = false;
+  $('modal-cancel').onclick = function () { $('modal-mask').hidden = true; };
+  $('modal-ok').onclick = function () {
+    localStorage.removeItem(LS_KEY);
+    location.reload();
+  };
+  $('modal-mask').onclick = function (e) {
+    if (e.target === this) this.hidden = true;
+  };
+}
+
+/* ================= 渲染入口 ================= */
+function renderAll() {
+  renderCountdowns();
+  renderHome();
+  renderPlan();
+  renderHistory();
+  renderMusic();
+  renderQuiz();
+  renderStats();
+}
+
+/* ================= 事件绑定 ================= */
+document.addEventListener('DOMContentLoaded', function () {
+  renderAll();
+  setInterval(renderCountdowns, 1000);
+
+  /* Tab 切换 */
+  document.getElementById('tabbar').addEventListener('click', function (e) {
+    var btn = e.target.closest('.tab');
+    if (!btn) return;
+    document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
+    document.querySelectorAll('.view').forEach(function (v) { v.classList.remove('active'); });
+    btn.classList.add('active');
+    $('view-' + btn.dataset.view).classList.add('active');
+  });
+
+  /* 首页任务打卡（事件委托） */
+  document.addEventListener('change', function (e) {
+    var cb = e.target;
+    if (cb.id === 'reset-tasks' || !cb.dataset || !('task' in cb.dataset)) return;
+    var i = +cb.dataset.task;
+    var tasks = getTasks(todayStr());
+    if (tasks[i]) { tasks[i].done = cb.checked; save(); }
+    renderHome();
+  });
+
+  /* 首页按钮 */
+  document.addEventListener('click', function (e) {
+    if (e.target.id === 'reset-tasks') {
+      var tasks = getTasks(todayStr());
+      tasks.forEach(function (t) { t.done = false; });
+      save();
+      renderHome();
+      toast('今日任务已重置');
+    }
+  });
+
+  /* 历史：选关 */
+  document.getElementById('view-history').addEventListener('click', function (e) {
+    var btn = e.target.closest('.stage-btn');
+    if (btn) { startMatch(btn.dataset.stage); return; }
+    if (e.target.id === 'restart-match') { startMatch(histView.stage); return; }
+    var chip = e.target.closest('.item-chip');
+    if (chip) { onMatchChipClick(chip); return; }
+    var opt = e.target.closest('.qa-opt');
+    if (opt) { onQAClick(opt); return; }
+    if (e.target.id === 'add-mistake') {
+      var point = ($('mk-point').value || '').trim();
+      var reason = ($('mk-reason').value || '').trim();
+      if (!point) { toast('请先填写知识点'); return; }
+      state.mistakes.push({ id: Date.now(), date: todayStr(), point: point, reason: reason });
+      save(); renderHistory(); toast('📕 错题已记入错题本');
+      return;
+    }
+    var delBtn = e.target.closest('[data-del-mistake]');
+    if (delBtn) {
+      var mid = +delBtn.dataset.delMistake;
+      state.mistakes = state.mistakes.filter(function (m) { return m.id !== mid; });
+      save(); renderHistory(); toast('🗑 已删除');
+      return;
+    }
+  });
+
+  /* 模考：保存成绩 */
+  document.getElementById('view-stats').addEventListener('click', function (e) {
+    if (e.target.id !== 'save-score') return;
+    var subs = {};
+    SCORE_KEYS.forEach(function (k) { subs[k.name] = parseInt($('sc-' + k.key).value, 10) || 0; });
+    var targets = getTargets();
+    SCORE_KEYS.forEach(function (k) { targets[k.name] = parseInt($('tg-' + k.key).value, 10) || 0; });
+    var date = $('sc-date').value || todayStr();
+    state.scores.push({ date: date, subs: subs, total: scoreTotal(subs) });
+    save();
+    toast('✅ 模考成绩已保存');
+    renderStats();
+  });
+
+  /* 艺考：保存练习 */
+  document.getElementById('view-music').addEventListener('click', function (e) {
+    if (e.target.id !== 'save-music') return;
+    var warmup = parseInt($('m-warmup').value, 10) || 0;
+    var piece = parseInt($('m-piece').value, 10) || 0;
+    var sight = parseInt($('m-sight').value, 10) || 0;
+    state.music[todayStr()] = { warmup: warmup, piece: piece, sight: sight };
+    save();
+    toast('✅ 今日练笛 ' + (warmup + piece + sight) + ' 分钟已保存');
+    renderMusic();
+    renderStats();
+  });
+
+  /* 周测 */
+  document.getElementById('view-quiz').addEventListener('click', function (e) {
+    var opt = e.target.closest('.qa-opt');
+    if (opt) {
+      var box = opt.closest('.qa-box');
+      if (box.dataset.locked === '1') return;
+      var q = +opt.dataset.q;
+      box.querySelectorAll('.qa-opt').forEach(function (o) {
+        o.classList.remove('selected');
+        o.style.borderColor = '';
+        o.style.background = '';
+      });
+      opt.classList.add('selected');
+      opt.style.borderColor = 'var(--brand)';
+      opt.style.background = '#fff3ee';
+      return;
+    }
+    if (e.target.id === 'submit-quiz') submitQuiz();
+    if (e.target.id === 'redo-quiz') { renderQuiz(); toast('已重新开始'); }
+  });
+
+  /* 底部重置入口 */
+  var footer = document.querySelector('.footer');
+  if (footer) {
+    var resetLink = document.createElement('a');
+    resetLink.href = 'javascript:void(0)';
+    resetLink.textContent = '重置全部数据';
+    resetLink.style.cssText = 'color:var(--muted);text-decoration:underline;margin-left:12px;font-size:.75rem;';
+    resetLink.onclick = function () { showResetModal(); };
+    footer.appendChild(resetLink);
+  }
+});
+
+})();
+</script>
+</body>
+</html>
